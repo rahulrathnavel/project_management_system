@@ -219,4 +219,4 @@ project_management_system/
 - **GitHub Repository**: [https://github.com/rahulrathnavel/project_management_system](https://github.com/rahulrathnavel/project_management_system)
 - **Live Application**: [https://pms-web-8dzr.onrender.com](https://pms-web-8dzr.onrender.com)
 - **ER Diagram**: [docs/ER_DIAGRAM.md](docs/ER_DIAGRAM.md)
-- **API Documentation** — Markdown: docs/API_DOCUMENTATION.md
+- **API Documentation** — [docs/API_DOCUMENTATION.md](docs/API_DOCUMENTATION.md)
