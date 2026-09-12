@@ -152,9 +152,11 @@ npm run test:e2e --workspace=api
 - Payload Tampering (Attempts to inject `role: 'ADMIN'` during registration are explicitly rejected with a 400 error).
 
 ## API Documentation
-The API is strictly typed and heavily documented using Swagger UI.
-- **Local:** `http://localhost:3001/api/docs`
-- **Production:** Available at `/api/docs` on the live API deployment.
+The API is strictly typed and heavily documented.
+
+- **Interactive Swagger API Documentation**: [https://pms-api-eddc.onrender.com/api/docs](https://pms-api-eddc.onrender.com/api/docs)
+- **API Documentation — Markdown**: [docs/API_DOCUMENTATION.md](docs/API_DOCUMENTATION.md)
+- **Local Swagger**: `http://localhost:3001/api/docs`
 
 ## Database Schema
 The database architecture is fully mapped. View the [Entity-Relationship Diagram](docs/ER_DIAGRAM.md).
@@ -172,7 +174,8 @@ A GitHub Actions workflow (`.github/workflows/ci.yml`) is active. It automatical
 ## Deployment
 The application is deployed securely in a production environment via Render.
 
-- **Live Application**: [https://pms-web-8dzr.onrender.com/](https://pms-web-8dzr.onrender.com/)
+- **Live Application**: [https://pms-web-8dzr.onrender.com](https://pms-web-8dzr.onrender.com)
+- **Live API Endpoint**: [https://pms-api-eddc.onrender.com/api](https://pms-api-eddc.onrender.com/api)
 
 *(See [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) for full architectural details).*
 
@@ -213,7 +216,7 @@ project_management_system/
 | Deployment | Complete |
 
 ## Submission Links
-- **GitHub Repository**: [https://github.com/rahulrathnavel/project_management_system.git](https://github.com/rahulrathnavel/project_management_system.git)
-- **Live Application**: [https://pms-web-8dzr.onrender.com/](https://pms-web-8dzr.onrender.com/)
+- **GitHub Repository**: [https://github.com/rahulrathnavel/project_management_system](https://github.com/rahulrathnavel/project_management_system)
+- **Live Application**: [https://pms-web-8dzr.onrender.com](https://pms-web-8dzr.onrender.com)
 - **ER Diagram**: [docs/ER_DIAGRAM.md](docs/ER_DIAGRAM.md)
 - **Final Audit**: [docs/FINAL_AUDIT.md](docs/FINAL_AUDIT.md)

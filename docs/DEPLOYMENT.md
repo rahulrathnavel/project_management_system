@@ -47,7 +47,7 @@ You will create three separate services in Render:
 9. **Advanced Settings > Health Check Path:**
    - `/api` *(NestJS answers with a 200 OK here).*
 
-10. Click **Create Web Service**. Wait for it to deploy, then copy the live API URL (e.g., `https://pms-api.onrender.com`).
+10. Click **Create Web Service**. Wait for it to deploy, then copy the live API URL (e.g., `https://pms-api-eddc.onrender.com`).
 
 ---
 
@@ -60,7 +60,7 @@ You will create three separate services in Render:
 5. **Environment:** `Node`
 6. **Build Command:**
    ```bash
-   npm install && npm run build --workspace=web
+   npm install --include=dev && npm run build --workspace=web
    ```
 7. **Start Command:**
    ```bash
@@ -68,7 +68,7 @@ You will create three separate services in Render:
    ```
 
 8. **Advanced Settings > Environment Variables:**
-   - `NEXT_PUBLIC_API_URL` = *(Paste your API URL from Step 2, appending `/api`. E.g., `https://pms-api.onrender.com/api`)*
+   - `NEXT_PUBLIC_API_URL` = `https://pms-api-eddc.onrender.com/api`
 
 9. Click **Create Web Service**.
 
@@ -78,7 +78,7 @@ You will create three separate services in Render:
 
 Render assigns dynamic URLs. Because this app relies on strict CORS and Secure Cookies:
 
-1. Copy the exact live URL of your deployed Next.js service (e.g., `https://pms-web-xy12.onrender.com`).
+1. Copy the exact live URL of your deployed Next.js service (e.g., `https://pms-web-8dzr.onrender.com`).
 2. Go back to your **API Web Service** in Render.
 3. Open **Environment**, edit `FRONTEND_URL`, and paste the exact Next.js URL.
 4. **Save** and wait for the API to redeploy.
