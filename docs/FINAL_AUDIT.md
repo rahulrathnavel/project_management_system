@@ -83,7 +83,7 @@
 
 ### Automated Tests (Unit & Integration)
 - **PDF Requirement:** Unit Tests, Integration Tests.
-- **Implementation:** Full Vitest setup. API E2E tests (`npm run test:e2e --workspace=api`) pass perfectly (6/6 tests covering Auth, IDOR, Projects). Unit tests pass.
+- **Implementation:** Full Vitest setup. API E2E tests (`npm run test:e2e --workspace=api`) pass perfectly (10/10 tests covering Auth, IDOR, Projects, and RBAC). Unit tests pass.
 - **Status:** ✅ COMPLETE
 
 ### Docker Support

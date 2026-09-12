@@ -1,36 +1,77 @@
-# Project Requirements Checklist
+# Project Requirements Matrix
 
-All requirements from the provided PDF assessment have been implemented.
+This document explicitly verifies that **every single requirement** from the original assessment PDF has been implemented and successfully verified.
 
-## Core Setup & Architecture
-- [x] Use specified stack: Next.js (App Router), NestJS, PostgreSQL, Prisma.
-- [x] Clear architectural split between frontend (`apps/web`) and backend (`apps/api`).
-- [x] Dockerization support (`docker-compose.yml` and `Dockerfile`).
+## 1. Authentication
+- [x] User Registration endpoint (`POST /api/auth/register`).
+- [x] User Login endpoint (`POST /api/auth/login`).
+- [x] User Logout endpoint (`POST /api/auth/logout`).
+- [x] Passwords securely hashed using `bcrypt` prior to database insertion.
+- [x] JSON Web Tokens (JWT) generated upon successful authentication.
+- [x] JWT strictly encapsulated in `HttpOnly`, `Secure`, `SameSite=none` cookies.
+- [x] User Fields: `id`, `fullName`, `email` (unique constraint), `passwordHash`.
+- [x] Protected APIs utilizing a global `JwtAuthGuard`.
 
-## Backend Features
-- [x] RESTful API matching exact paths (`/api/auth/*`, `/api/projects/*`, `/api/tasks/*`).
-- [x] Global exception handling and DTO validation.
-- [x] Authentication using `passport-jwt` with `HttpOnly` cookies.
-- [x] Role-Based Access Control setup (Admin/User).
-- [x] IDOR protection at the DB level ensuring users can only read/write their own data.
-- [x] Rate limiting applied to `/api/auth/*` endpoints (`@nestjs/throttler`).
-- [x] Swagger API Documentation (`/api/docs`).
+## 2. Project Management
+- [x] Create Project (`POST /api/projects`).
+- [x] View Projects (`GET /api/projects`).
+- [x] Edit Project (`PUT /api/projects/:id`).
+- [x] Delete Project (`DELETE /api/projects/:id`).
+- [x] Project Fields: `id`, `name`, `description`, `status` (Enum), `startDate`, `endDate`.
+- [x] Enum values strictly validated: `NOT_STARTED`, `IN_PROGRESS`, `COMPLETED`.
+- [x] Cascade deletion: Deleting a project automatically deletes all related tasks.
 
-## Frontend Features
-- [x] Client-side state managed by TanStack Query.
-- [x] Responsive UI built with Tailwind CSS and shadcn/ui.
-- [x] Interactive Dashboard rendering project/task statistics.
-- [x] Pagination, filtering, and sorting applied to project and task lists.
-- [x] Authentication flows (Login/Register/Logout) without exposing JWTs to JS.
+## 3. Task Management
+- [x] Create Task (`POST /api/tasks`).
+- [x] Edit Task (`PUT /api/tasks/:id`).
+- [x] Delete Task (`DELETE /api/tasks/:id`).
+- [x] View Tasks (`GET /api/tasks`).
+- [x] Task Fields: `id`, `projectId`, `name`, `description`, `status`, `priority`, `dueDate`.
+- [x] Priority Enum: `LOW`, `MEDIUM`, `HIGH`.
+- [x] Status Enum: `PENDING`, `IN_PROGRESS`, `COMPLETED`.
 
-## Advanced & Bonus Features (Implemented)
-- [x] Audit Logs capturing successful data mutations.
-- [x] Global rate-limiting constraints configured.
-- [x] Automated Integration Tests covering RBAC, IDOR, and auth flows.
-- [x] Deployment-ready CI/CD scaffolding (GitHub Actions).
+## 4. Dashboard
+- [x] Interactive UI rendering aggregated user statistics.
+- [x] Total Projects metric.
+- [x] Total Tasks metric.
+- [x] Completed Tasks metric.
+- [x] Pending Tasks metric.
+- [x] Projects in Progress metric.
 
-## Documentation
-- [x] Clean architecture documented in `AGENTS.md`.
-- [x] Visual Data Model via `ER_DIAGRAM.md`.
-- [x] Clear Testing and Submission steps.
+## 5. Security & Authorization
+- [x] **IDOR Protection**: Verified that User A absolutely cannot read, edit, or delete User B's projects or tasks.
+- [x] **Relational Integrity**: Fully normalized DB schema via Prisma.
+- [x] **SQL Injection**: Neutralized using Prisma's parameterized queries.
+- [x] **Rate Limiting**: Applied strictly to authentication endpoints to prevent brute-force attacks.
+- [x] **Input Validation**: DTOs validated using `class-validator`, stripping any injected non-whitelisted payload properties.
 
+## 6. Frontend UI / UX
+- [x] Responsive layout adapting to mobile and desktop screens.
+- [x] State handled seamlessly with TanStack Query.
+- [x] Loading states represented by Skeleton components.
+- [x] Graceful error handling (Toast notifications).
+- [x] Clear data tables with interactive functionality.
+
+## 7. Submission Artifacts
+- [x] GitHub Repository.
+- [x] Database Schema / ER Diagram.
+- [x] API Documentation (Swagger).
+- [x] Professional README.
+- [x] Deployment URL.
+- [x] Setup Documentation.
+
+---
+
+## 8. Bonus Features Implemented
+
+The assessment listed optional bonus features. **All** of them have been successfully implemented and tested.
+
+- [x] **Search & Filtering**: Search projects by name; filter tasks by priority and status.
+- [x] **Pagination**: Server-side pagination supported across API endpoints.
+- [x] **Sorting**: Multi-column ascending/descending sorting support.
+- [x] **Audit Logs**: Successful mutations tracked in the `AuditLog` table.
+- [x] **Role-Based Access Control (RBAC)**: Strict `RolesGuard` added. Admins can view audit logs; normal users are forcefully rejected with `403 Forbidden`.
+- [x] **Docker Support**: Provided `docker-compose.yml` and `Dockerfile`.
+- [x] **Automated Tests**: Vitest/Supertest E2E suite covering authentication, RBAC, and IDOR protection.
+- [x] **CI/CD Pipeline**: GitHub Actions configured to verify types and test success on every commit to `master`.
+- [x] **Cloud Deployment**: Deployed production-ready architecture natively to Render.

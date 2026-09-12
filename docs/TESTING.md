@@ -1,42 +1,62 @@
-# Testing Workflow
+# Testing Methodology
 
-This document outlines how to manually verify the Project Management System locally.
+This document explicitly outlines the testing coverage implemented to guarantee application integrity, security, and functional completeness. 
 
-## Prerequisites
+The strategy consists of a robust automated programmatic suite (E2E) and structured manual verification flows.
 
-1. Ensure PostgreSQL is running on `localhost:5432` and the `pms` database exists (or update `.env` to match your local config).
-2. Start the backend: `cd apps/api && npm run start:dev` (runs on `http://localhost:3001`).
-3. Start the frontend: `cd apps/web && npm run dev` (runs on `http://localhost:3000`).
+---
 
-## 1. Authentication & Security
-- **Registration**: Navigate to `http://localhost:3000/auth/register`. Create an account.
-- **Login**: Navigate to `/auth/login`. You should receive an `HttpOnly` cookie for security.
-- **Rate Limiting**: Refresh the login endpoint >10 times rapidly (or use Postman) to trigger the `429 Too Many Requests` response.
+## 1. Automated Testing Suite (E2E)
 
-## 2. Dashboard
-- View aggregate metrics: Total Projects, Total Tasks, Pending Tasks, Completed Tasks.
-- Create projects/tasks and observe the numbers update dynamically (TanStack Query handles the caching and revalidation).
+The backend (`apps/api`) utilizes Vitest and Supertest to programmatically execute integration tests against a live (isolated) database instance. 
 
-## 3. Project Management (CRUD & IDOR)
-- **Create**: Navigate to `Projects > Create Project`. Validate the "End Date must be greater than or equal to Start Date" logic.
-- **Listing**: Search for projects by name, and sort/paginate them.
-- **Update**: Edit the project details.
-- **Delete**: Deleting a project will cascade-delete all its associated tasks.
-- **IDOR Check**: Create a second account. Try to edit/view the first account's project using its UUID in the URL. The system will throw a 403/404.
+**Execution Command:**
+```bash
+npm run test:e2e --workspace=api
+```
+*(Tests must be executed sequentially with `--fileParallelism false` to prevent database race conditions).*
 
-## 4. Task Management
-- Navigate to the Tasks listing.
-- Test the drop-down filter by selecting specific projects to view their tasks.
-- Create tasks linked to your existing projects.
-- Verify that attempting to create a task for a project ID owned by another user fails.
+### Automated Coverage Highlights
+- **Authentication & Validation:** 
+  - Validates successful registration and login. 
+  - Asserts that missing or malformed payload fields (`class-validator`) are dropped or rejected with `400 Bad Request`.
+  - Asserts that JWT tokens are correctly attached to `HttpOnly` headers (`res.headers['set-cookie']`).
+- **Authorization & IDOR (Insecure Direct Object Reference):**
+  - Explicitly creates `User A` and `User B`. 
+  - Attempts to have `User B` read, update, or delete `User A`'s project by injecting their UUID into the endpoint. 
+  - Asserts that the system successfully rejects the attack with `404 Not Found` or `403 Forbidden`.
+- **Role-Based Access Control (RBAC):**
+  - Asserts that normal `USER` accounts receive `403 Forbidden` when attempting to hit `GET /api/audit`.
+  - Asserts that malicious attempts to tamper with the registration payload (e.g., `{"email": "...", "password": "...", "role": "ADMIN"}`) are safely intercepted and stripped by the validation layer.
 
-## 5. Automated Tests
-- You can run the backend integration suite via:
-  ```bash
-  cd apps/api
-  npm run test:e2e
-  ```
-- This suite automatically checks:
-  1. Auth paths and rate-limit bounds.
-  2. IDOR prevention (`User B cannot access User A's projects`).
+---
 
+## 2. Manual Verification Workflow
+
+Automated tests prove security boundaries; manual tests prove UX and feature completeness. Follow this workflow on the live deployment or local environment.
+
+### A. Authentication & UI Validation
+1. Navigate to `/auth/register`. Input an invalid email. Observe the frontend Zod validation block submission.
+2. Complete registration and redirect to login.
+3. Rapidly submit the login form >10 times. Observe the backend rate limiter (`@nestjs/throttler`) respond with `429 Too Many Requests`.
+
+### B. Project & Task Lifecycle
+1. Navigate to the **Projects** page. Click **New Project**.
+2. Create a project. Ensure `EndDate` is validated to be after `StartDate`.
+3. Create several tasks underneath this project with varying priorities (`HIGH`, `MEDIUM`, `LOW`) and statuses (`PENDING`, `COMPLETED`).
+4. Navigate to the **Dashboard** and confirm the statistics (e.g., "Completed Tasks") update instantly.
+
+### C. Advanced Queries (Filtering, Sorting, Pagination)
+1. On the **Projects** page, use the Search bar to query a specific project string.
+2. Sort projects dynamically using the column headers.
+3. On the **Tasks** page, utilize the drop-down filters to filter exclusively by `Priority: HIGH`.
+
+### D. Cascade Integrity
+1. Delete the created Project.
+2. Navigate to the **Tasks** page and verify that all associated tasks were instantly and safely cascade-deleted by Prisma.
+
+### E. Admin & Audit Logs
+1. Ensure you have an Admin account (created via `npm run create:admin`).
+2. Login as the Admin.
+3. Verify the **Audit Logs** navigation link appears in the sidebar.
+4. Click Audit Logs and review the immutable historical tracking of your Project and Task creations/deletions.

@@ -4,8 +4,8 @@ This system uses a normalized PostgreSQL schema with Prisma ORM.
 
 ```mermaid
 erDiagram
-    User ||--o{ Project : "owns (1:N)"
-    User ||--o{ AuditLog : "triggers (1:N)"
+    User ||--o{ Project : "owns (1:N, ON DELETE CASCADE)"
+    User ||--o{ AuditLog : "triggers (1:N, ON DELETE SET NULL)"
     Project ||--o{ Task : "contains (1:N, ON DELETE CASCADE)"
 
     User {

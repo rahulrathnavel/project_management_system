@@ -42,7 +42,7 @@ You will create three separate services in Render:
    - `NODE_ENV` = `production` *(Crucial: Enables secure `HttpOnly` and `SameSite=none` cookies for cross-origin authentication).*
    - `DATABASE_URL` = *(Paste the Internal Database URL from Step 1)*
    - `JWT_SECRET` = *(Generate a secure random string, e.g., using `openssl rand -base64 32`)*
-   - `FRONTEND_URL` = *(You won't have the exact frontend URL yet. Put a placeholder like `https://pms-web.onrender.com` for now. You MUST update this after Step 3 to match the exact Next.js frontend URL to avoid CORS errors).*
+   - `FRONTEND_URL` = `https://pms-web-8dzr.onrender.com` *(This matches the live Next.js frontend URL to prevent CORS errors).*
 
 9. **Advanced Settings > Health Check Path:**
    - `/api` *(NestJS answers with a 200 OK here).*
@@ -101,3 +101,4 @@ To test RBAC in production, utilize Render's powerful Shell feature to run your 
    npm run create:admin --workspace=api admin@example.com SecurePassword123! "Live Admin"
    ```
 4. Return to your frontend, log in as `admin@example.com`, and verify you can see the **Audit Logs**.
+
